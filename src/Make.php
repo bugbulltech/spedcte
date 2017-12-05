@@ -554,6 +554,21 @@ class Make extends BaseMake
                 $this->dom->appChild($this->infDoc, $infOutros, 'Falta tag "infOutros"');
             }
 
+            if ($this->idDocAntPap != []) { //Caso tenha CT-es Anteriores viculados
+                $this->dom->appChild($this->infCTeNorm, $this->docAnt, 'Falta tag "docAnt"');
+
+
+                foreach ($this->emiDocAnt as $emiDocAnt) {
+                    $this->dom->appChild($this->docAnt, $emiDocAnt, 'Falta tag "emiDocAnt"');
+                    $this->dom->appChild($emiDocAnt, $this->idDocAnt, 'Falta tag "idDocAnt"');
+
+                    foreach ($this->idDocAntPap as $idDocAntPap) {
+                    
+                        $this->dom->appChild($this->idDocAnt, $idDocAntPap, 'Falta tag "emiDocAnt"');
+                    }
+                }
+            }
+
             if ($this->idDocAntEle != []) { //Caso tenha CT-es Anteriores viculados
                 $this->dom->appChild($this->infCTeNorm, $this->docAnt, 'Falta tag "docAnt"');
 
@@ -3014,7 +3029,7 @@ class Make extends BaseMake
 
     /**
      * Gera as tags para o elemento: "idDocAntEle" (Informações dos CT-es Anteriores)
-     * #358
+     * #348
      * Nível: 4
      * @param string $chCTe
      * @return mixed
@@ -3028,6 +3043,30 @@ class Make extends BaseMake
             . 'Acesso do CT-e');
 
         return $this->idDocAntEle[$posicao];
+    }
+
+
+
+    /**
+     * Gera as tags para o elemento: "idDocAntPap" (Informações dos CT-es Anteriores Papel)
+     * #342
+     * Nível: 5
+     * @param string $tpDoc
+     * @return mixed
+     */
+    public function idDocAntPapTag($tpDoc = '', $serie = '', $subser = '', $nDoc = '', $dEmi = '')
+    {
+        $identificador = '#342 <idDocAntPap> - ';
+        $this->idDocAntPap[] = $this->dom->createElement('idDocAntPap');
+        $posicao = (integer)count($this->idDocAntPap) - 1;
+
+        $this->dom->addChild($this->idDocAntPap[$posicao], 'tpDoc', $tpDoc, true, $identificador . 'Tipo de documento');
+        $this->dom->addChild($this->idDocAntPap[$posicao], 'serie', $serie, true, $identificador . 'Número de série');
+    //    $this->dom->addChild($this->idDocAntPap[$posicao], 'subser', $subser, false, $identificador . 'Número de série');
+        $this->dom->addChild($this->idDocAntPap[$posicao], 'nDoc', $nDoc, true, $identificador . 'Número do documento');
+        $this->dom->addChild($this->idDocAntPap[$posicao], 'dEmi', $dEmi, true, $identificador . 'Data do documento');
+
+        return $this->idDocAntPap[$posicao];
     }
 
      /**
